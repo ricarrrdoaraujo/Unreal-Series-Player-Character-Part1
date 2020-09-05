@@ -47,6 +47,14 @@ APunchKick01Character::APunchKick01Character()
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
+
+	//Load an animation montage
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> MeleeFirstAttackMontageObject(TEXT("AnimMontage'/Game/TUTORIAL_RESOURCES/Animations/MeleeFirstAttackMontage.MeleeFirstAttackMontage'"));
+	if (MeleeFirstAttackMontageObject.Succeeded())
+	{
+		MeleeFirstAttackMontage = MeleeFirstAttackMontageObject.Object;
+	}
+	
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -76,6 +84,28 @@ void APunchKick01Character::SetupPlayerInputComponent(class UInputComponent* Pla
 
 	// VR headset functionality
 	PlayerInputComponent->BindAction("ResetVR", IE_Pressed, this, &APunchKick01Character::OnResetVR);
+
+	// Attack functionality
+	PlayerInputComponent->BindAction("Attack", IE_Pressed, this, &APunchKick01Character::AttackStart);
+	PlayerInputComponent->BindAction("Attack", IE_Released, this, &APunchKick01Character::AttackEnd);
+}
+
+void APunchKick01Character::AttackStart()
+{
+	Log(ELogLevel::INFO, __FUNCTION__);
+
+	//generate a random number between 1 and 2
+	int MontageSectionIndex = rand() % 3 + 1;
+
+	//fstring animation section
+	FString MontageSection = "start_" + FString::FromInt(MontageSectionIndex);
+	
+	PlayAnimMontage(MeleeFirstAttackMontage, 1.f, FName(*MontageSection));
+}
+
+void APunchKick01Character::AttackEnd()
+{
+	Log(ELogLevel::INFO, __FUNCTION__);
 }
 
 

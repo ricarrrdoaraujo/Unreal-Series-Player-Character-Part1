@@ -40,6 +40,11 @@ class APunchKick01Character : public ACharacter
 	/** Follow camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* FollowCamera;
+
+	// Melee first sttack montage
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category= Animation, meta=(AllowPrivateAccess = "true"))
+	class UAnimMontage* MeleeFirstAttackMontage;
+	
 public:
 	APunchKick01Character();
 
@@ -84,6 +89,16 @@ protected:
 	// APawn interface
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	// End of APawn interface
+
+	/*
+	 * AttackStart - Triggered when player initiate an attack
+	 */
+	void AttackStart();
+
+	/*
+	 * AttackEnd - When player stops the attack
+	 */
+	void AttackEnd();
 
 public:
 	/** Returns CameraBoom subobject **/
